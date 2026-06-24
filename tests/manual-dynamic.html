@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>MathShield manual dynamic test</title>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] },
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, { throwOnError: false })"
+    ></script>
+    <style>
+      body {
+        font: 16px/1.5 system-ui, sans-serif;
+        margin: 32px;
+        max-width: 860px;
+      }
+
+      button {
+        font: inherit;
+        padding: 8px 12px;
+      }
+
+      .box {
+        border: 1px solid #ccc;
+        margin-top: 16px;
+        padding: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MathShield manual dynamic test</h1>
+
+    <p>
+      Initial MathJax:
+      \[
+        a = 9.8\,\mathrm{m/s^2}\quad \text{acceleration near Earth}
+      \]
+    </p>
+
+    <p>
+      Localized units:
+      \[
+        F = 12\,\text{Н},\quad E = 30\,\text{Дж},\quad v = 5\,\text{м/с}
+      \]
+    </p>
+
+    <p>
+      Initial KaTeX:
+      \( F = ma \quad \text{force in N} \)
+    </p>
+
+    <button id="insert">Insert dynamic math</button>
+    <div id="dynamic" class="box"></div>
+
+    <script>
+      document.getElementById("insert").addEventListener("click", () => {
+        const target = document.getElementById("dynamic");
+        target.innerHTML +=
+          "<p>Dynamic MathJax: \\\\( v = 5\\\\,\\\\mathrm{м/с} \\\\quad \\\\text{constant speed in м/с} \\\\)</p>";
+
+        const script = document.createElement("script");
+        script.type = "math/tex; mode=display";
+        script.textContent = "\\text{dynamic source script}\\quad E = 12\\,\\text{Дж}";
+        target.appendChild(script);
+
+        const multilingual = document.createElement("p");
+        multilingual.textContent =
+          "Multiscript: \\( a=١٢\\,\\text{كم/ث}, b=३\\,\\text{मीटर प्रति सेकंड वर्ग}, c=5\\,\\text{平方米} \\)";
+        target.appendChild(multilingual);
+
+        if (window.MathJax?.typesetPromise) {
+          window.MathJax.typesetPromise([target]);
+        }
+        if (window.renderMathInElement) {
+          window.renderMathInElement(target, { throwOnError: false });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "math-shield",
+  "version": "1.0.0",
+  "description": "MathShield is a Chrome Manifest V3 extension that protects and repairs mathematical expressions when webpages are translated.",
+  "main": "background.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "python -X utf8 tests/run.py",
+    "test:e2e": "playwright test",
+    "test:e2e:loop": "node scripts/run_e2e_loop.cjs",
+    "test:e2e:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s4m256/math-shield.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/s4m256/math-shield/issues"
+  },
+  "homepage": "https://github.com/s4m256/math-shield#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "@types/node": "^26.0.0"
+  }
+}

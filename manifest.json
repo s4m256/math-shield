@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Math Shield",
-  "version": "1.0",
-  "description": "Protects math expressions when translating webpages",
-  "permissions": ["scripting"],
+  "version": "2.0.0",
+  "minimum_chrome_version": "102",
+  "description": "Protects and normalizes multilingual math expressions when translating webpages",
+  "permissions": ["scripting", "storage"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "background.js"
@@ -12,7 +13,13 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "run_at": "document_idle"
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["units-db.json"],
+      "matches": ["<all_urls>"]
     }
   ],
   "icons": {

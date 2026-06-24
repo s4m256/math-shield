@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>MathShield automated tests</title>
+    <script>
+      globalThis.__MATHSHIELD_TEST_MODE__ = true;
+      globalThis.chrome ||= {};
+      chrome.runtime = {
+        getURL(path) {
+          return new URL(`../${path}`, location.href).href;
+        },
+      };
+      chrome.storage = { local: { set: async () => {} } };
+    </script>
+    <script src="../content.js"></script>
+  </head>
+  <body data-status="running">
+    <h1>MathShield automated tests</h1>
+    <pre id="result">Running...</pre>
+    <script>
+      (async () => {
+        const cases = await fetch("unit-corpus.json").then((response) => response.json());
+        const failures = [];
+
+        for (const testCase of cases) {
+          const actual =
+            testCase.type === "unit"
+              ? await MathShieldTest.normalizeUnit(testCase.input, testCase.locale)
+              : await MathShieldTest.transformLatex(testCase.input, testCase.locale);
+          if (actual !== testCase.expected) {
+            failures.push({ name: testCase.name, expected: testCase.expected, actual });
+          }
+        }
+
+        const runtimeResult = await new Promise((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error("Runtime smoke test timed out")), 5000);
+          addEventListener(
+            "message",
+            (event) => {
+              if (event.data?.type !== "mathshield-runtime-smoke") return;
+              clearTimeout(timer);
+              resolve(event.data);
+            },
+            { once: true }
+          );
+          const iframe = document.createElement("iframe");
+          iframe.src = "runtime-smoke.html";
+          iframe.hidden = true;
+          document.body.appendChild(iframe);
+        });
+        const runtimePassed =
+          runtimeResult.protected &&
+          runtimeResult.hashed &&
+          runtimeResult.rerendered &&
+          runtimeResult.latex === "v=١٢\\,\\mathrm{m}/\\mathrm{s}";
+        if (!runtimePassed) {
+          failures.push({ name: "Runtime document_start smoke test", actual: runtimeResult });
+        }
+
+        document.body.dataset.status = failures.length ? "failed" : "passed";
+        document.getElementById("result").textContent = JSON.stringify(
+          {
+            total: cases.length + 1,
+            passed: cases.length + 1 - failures.length,
+            failures,
+          },
+          null,
+          2
+        );
+        document.title = failures.length ? "FAIL" : "PASS";
+      })().catch((error) => {
+        document.body.dataset.status = "failed";
+        document.getElementById("result").textContent = error.stack || String(error);
+        document.title = "FAIL";
+      });
+    </script>
+  </body>
+</html>

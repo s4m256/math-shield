@@ -1,0 +1,191 @@
+[
+  {
+    "name": "Cyrillic compound symbols",
+    "type": "unit",
+    "locale": "ru",
+    "input": "м/с",
+    "expected": "\\mathrm{m}/\\mathrm{s}"
+  },
+  {
+    "name": "Cyrillic micro prefix uses valid UCUM and LaTeX forms",
+    "type": "unit",
+    "locale": "ru",
+    "input": "мкм",
+    "expected": "\\mu\\mathrm{m}"
+  },
+  {
+    "name": "Arabic compound symbols",
+    "type": "unit",
+    "locale": "ar",
+    "input": "كم/ث",
+    "expected": "\\mathrm{km}/\\mathrm{s}"
+  },
+  {
+    "name": "Devanagari compound abbreviations",
+    "type": "unit",
+    "locale": "hi",
+    "input": "मी/से",
+    "expected": "\\mathrm{m}/\\mathrm{s}"
+  },
+  {
+    "name": "Chinese names",
+    "type": "unit",
+    "locale": "zh",
+    "input": "米/秒",
+    "expected": "\\mathrm{m}/\\mathrm{s}"
+  },
+  {
+    "name": "Hebrew names",
+    "type": "unit",
+    "locale": "he",
+    "input": "מטר/שניה",
+    "expected": "\\mathrm{m}/\\mathrm{s}"
+  },
+  {
+    "name": "Portuguese inflected names",
+    "type": "unit",
+    "locale": "pt-BR",
+    "input": "metros/segundo",
+    "expected": "\\mathrm{m}/\\mathrm{s}"
+  },
+  {
+    "name": "Symbol case preserves second",
+    "type": "unit",
+    "locale": "pt",
+    "input": "s",
+    "expected": "\\mathrm{s}"
+  },
+  {
+    "name": "Symbol case preserves siemens",
+    "type": "unit",
+    "locale": "pt",
+    "input": "S",
+    "expected": "\\mathrm{S}"
+  },
+  {
+    "name": "Portuguese localized speed",
+    "type": "unit",
+    "locale": "pt-BR",
+    "input": "quilômetros por hora",
+    "expected": "\\mathrm{km}/\\mathrm{h}"
+  },
+  {
+    "name": "Arabic localized Celsius",
+    "type": "unit",
+    "locale": "ar",
+    "input": "درجة مئوية",
+    "expected": "^{\\circ}\\mathrm{C}"
+  },
+  {
+    "name": "Chinese localized area",
+    "type": "unit",
+    "locale": "zh",
+    "input": "平方米",
+    "expected": "\\mathrm{m}^{2}"
+  },
+  {
+    "name": "Devanagari localized acceleration",
+    "type": "unit",
+    "locale": "hi",
+    "input": "मीटर प्रति सेकंड वर्ग",
+    "expected": "\\mathrm{m}/\\mathrm{s}^{2}"
+  },
+  {
+    "name": "Arabic-Indic digits and localized units",
+    "type": "latex",
+    "locale": "ar",
+    "input": "v=١٢\\,\\text{كم/ث}",
+    "expected": "v=١٢\\,\\mathrm{km}/\\mathrm{s}"
+  },
+  {
+    "name": "Arabic grouped decimal remains exact",
+    "type": "latex",
+    "locale": "ar",
+    "input": "v=١٬٢٣٤٫٥\\,كم/ث",
+    "expected": "v=١٬٢٣٤٫٥\\,\\mathrm{km}/\\mathrm{s}"
+  },
+  {
+    "name": "Localized units inside human text",
+    "type": "latex",
+    "locale": "ru",
+    "input": "\\text{скорость 10 м/с}",
+    "expected": "\\text{скорость 10 m/s}"
+  },
+  {
+    "name": "Structural variables remain unchanged",
+    "type": "latex",
+    "locale": "en",
+    "input": "m,n \\in \\mathbb{R}",
+    "expected": "m,n \\in \\mathbb{R}"
+  },
+  {
+    "name": "Single Latin text variable is not a localized long unit name",
+    "type": "latex",
+    "locale": "en",
+    "input": "\\text{n}",
+    "expected": "\\text{n}"
+  },
+  {
+    "name": "Latin minimum subscript is not a minute",
+    "type": "latex",
+    "locale": "en",
+    "input": "r_\\text{min}",
+    "expected": "r_\\text{min}"
+  },
+  {
+    "name": "Latin m subscript is not a meter",
+    "type": "latex",
+    "locale": "en",
+    "input": "x_\\text{m}",
+    "expected": "x_\\text{m}"
+  },
+  {
+    "name": "Chemical chlorine is not a centiliter",
+    "type": "latex",
+    "locale": "en",
+    "input": "g_{\\mathrm{Cl}^-}",
+    "expected": "g_{\\mathrm{Cl}^-}"
+  },
+  {
+    "name": "Conductance variable is not a gram",
+    "type": "latex",
+    "locale": "en",
+    "input": "25 g_{\\mathrm{Na}^+}",
+    "expected": "25 g_{\\mathrm{Na}^+}"
+  },
+  {
+    "name": "Boltzmann constant variable is not a prefixed unit",
+    "type": "latex",
+    "locale": "en",
+    "input": "19k_BT",
+    "expected": "19k_BT"
+  },
+  {
+    "name": "Unknown mixed-script token remains unchanged",
+    "type": "latex",
+    "locale": "ru",
+    "input": "v=10\\,mс",
+    "expected": "v=10\\,mс"
+  },
+  {
+    "name": "Cyrillic compound units inside frac are normalized",
+    "type": "latex",
+    "locale": "ru",
+    "input": "G=6.67\\cdot10^{-11}~\\frac{м^3}{кг\\cdot с^2}",
+    "expected": "G=6.67\\cdot10^{-11}~\\frac{\\mathrm{m}^{3}}{\\mathrm{kg}\\cdot \\mathrm{s}^{2}}"
+  },
+  {
+    "name": "Unknown macro remains byte-identical",
+    "type": "latex",
+    "locale": "pt",
+    "input": "\\custommacro{12 metros}",
+    "expected": "\\custommacro{12 metros}"
+  },
+  {
+    "name": "Nested text inside unknown macro remains byte-identical",
+    "type": "latex",
+    "locale": "pt",
+    "input": "\\custommacro{\\text{12 metros}}",
+    "expected": "\\custommacro{\\text{12 metros}}"
+  }
+]

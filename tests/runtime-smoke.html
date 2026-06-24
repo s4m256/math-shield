@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      globalThis.chrome ||= {};
+      chrome.runtime = {
+        getURL(path) {
+          return new URL(`../${path}`, location.href).href;
+        },
+        async sendMessage(message) {
+          globalThis.__rerenderMessage = message;
+          return { ok: true };
+        },
+      };
+      chrome.storage = { local: { set: async () => {} } };
+    </script>
+    <script src="../content.js"></script>
+  </head>
+  <body>
+    <script id="source" type="math/tex">v=١٢\,\text{м/с}</script>
+    <script>
+      setTimeout(() => {
+        const source = document.getElementById("source");
+        parent.postMessage(
+          {
+            type: "mathshield-runtime-smoke",
+            protected: source.dataset.mathshieldProtected === "true",
+            hashed: Boolean(source.dataset.mathshieldHash),
+            latex: source.textContent,
+            rerendered: globalThis.__rerenderMessage?.type === "mathshield-rerender",
+          },
+          "*"
+        );
+      }, 1200);
+    </script>
+  </body>
+</html>
