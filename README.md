@@ -1,81 +1,60 @@
 # MathShield
 
-MathShield is a Chrome extension that fixes broken math when translating webpages.
+Chrome extension that prevents machine translation from corrupting mathematical notation and repairs recognized translated LaTeX text/units.
 
-## The problem
+[Reproduce the unit repair](scripts/demo.cjs) · [Broader v2 implementation (`test`)](https://github.com/s4m256/math-shield/tree/test)
 
-When using tools like Google Translate on pages with MathJax, formulas often break.
+| Input LaTeX | Output from `main` |
+| --- | --- |
+| `v = 12\,\mathrm{км}/\mathrm{с}` | `v = 12\,\mathrm{km}/\mathrm{s}` |
+| `R = 4\,\mathrm{кОм}` | `R = 4\,\mathrm{k\Omega}` |
+| `E = mc^2 + \alpha` | unchanged |
 
-Example:  
-https://pho.rs/p/4191
+These examples execute the actual transformation functions with no translation service. They show recognized unit normalization, not a simulated browser-translation result.
 
-After translation:
-- units get mistranslated 
-- symbols get corrupted 
-- formulas overlap or duplicate
-- spacing disappears, making expressions unreadable
+## Why
 
-Result: the problem becomes unusable.
+Reading a translated physics problem should not require deciphering damaged notation. MathShield separates rendered formulas from prose translation, then repairs selected unit symbols and text commands in the underlying LaTeX.
 
----
+## How it works
 
-## The solution
+```mermaid
+flowchart LR
+    A[Rendered MathJax nodes] --> B[Mark notranslate]
+    C[Browser translation detected] --> D[Inspect LaTeX scripts]
+    D --> E[Normalize units and selected text]
+    E --> F[Reprocess with MathJax v2]
+```
 
-MathShield fixes this by:
+## Technical highlights
 
-- Protecting rendered math from translation  
-- Translating only human-readable text inside LaTeX  
-- Converting units correctly using prefix + base logic   
-- Re-rendering MathJax safely after modifications  
+- A MutationObserver protects existing and newly inserted `.MathJax`, `.MathJax_Preview` and `.MathJax_Display` nodes.
+- Prefix-plus-base-unit matching normalizes selected Cyrillic forms, including `км`, `с` and `кОм`.
+- Text handling is restricted to selected LaTeX commands; `\mathrm` is excluded from word translation.
+- The MV3 background worker requests MathJax v2 reprocessing in the page's main JavaScript world only after source changes.
 
----
+## Verification
 
-## Features
+```bash
+node scripts/demo.cjs
+node --check content.js
+node --check background.js
+```
 
-- Works automatically on any site using MathJax  
-- Handles Cyrillic units and text  
-- Prevents layout break and overlapping formulas  
-- No setup required after installation  
-
----
+The fixture reports three passing examples, including an unchanged formula. It tests pure transformations, not Chrome's translation UI or an installed extension.
 
 ## Installation
 
-1. Download or clone this repository  
-2. Open Chrome and go to: chrome://extensions/
-3. Enable **Developer mode**  
-4. Click **Load unpacked**  
-5. Select the project folder  
+Clone this repository, open `chrome://extensions/`, enable Developer mode, choose **Load unpacked**, and select the repository directory. Translate a page containing MathJax v2 source scripts to exercise the runtime flow.
 
----
+## Current limits and privacy
 
-## Usage
+`main` targets MathJax v2 reprocessing and selected Cyrillic mappings. It does not provide universal MathJax, KaTeX or language support. Regex text extraction does not parse arbitrary nested LaTeX. Browser translation detection relies on `translated-ltr`/`translated-rtl` classes; starting on an already-translated page also exposes an observer-initialization bug in this version.
 
-1. Open a page with math (e.g. the example above)  
-2. Use browser translation  
-3. MathShield automatically fixes the formulas  
+The current text translation path sends extracted Cyrillic words to `translate.googleapis.com` using the browser language. Failed translations are silently skipped. Review the broad page permissions in [manifest.json](manifest.json) before installing.
 
----
+The separate [`test` branch](https://github.com/s4m256/math-shield/tree/test) implements a broader parser, a generated locale-aware unit database and browser regression fixtures. Its database validator passed during the audit; that does not certify all locale/engine combinations or make those features part of `main`. No branch was automatically promoted.
 
-## AI Usage
+## Development note
 
-Artificial intelligence tools were used during development for:
-- Debugging and troubleshooting parts of the extension
-- Brainstorming implementation ideas
-- Generating the project logo
-
-All core functionality, design decisions, and final implementation were reviewed and integrated manually.
-
----
-
-## Status
-
-Core functionality is complete.  
-Tested on physics/math problem pages with heavy LaTeX usage.
-
----
-
-## Notes
-
-- Some translation issues (like visually similar letters) come from Google Translate itself and cannot be fully fixed externally  
-- Future improvements may include support for MathJax v3  
+AI tools were used during development for debugging, brainstorming and the project logo, as disclosed in the previous README.
