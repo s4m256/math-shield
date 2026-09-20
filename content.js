@@ -74,9 +74,9 @@ function waitForTranslation(callback) {
     return false;
   };
 
+  const observer = new MutationObserver(run);
   if (run()) return;
 
-  const observer = new MutationObserver(run);
   observer.observe(html, { attributes: true, attributeFilter: ["class"] });
 }
 

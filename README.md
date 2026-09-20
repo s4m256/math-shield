@@ -2,7 +2,7 @@
 
 Chrome extension that prevents machine translation from corrupting mathematical notation and repairs recognized translated LaTeX text/units.
 
-[Reproduce the unit repair](scripts/demo.cjs) · [Broader v2 implementation (`test`)](https://github.com/s4m256/math-shield/tree/test)
+[Try the unit-repair demo](https://s4m256.github.io/math-shield/) · [Reproduce the unit repair](scripts/demo.cjs) · [Broader v2 implementation (`test`)](https://github.com/s4m256/math-shield/tree/test)
 
 | Input LaTeX | Output from `main` |
 | --- | --- |
@@ -37,6 +37,7 @@ flowchart LR
 
 ```bash
 node scripts/demo.cjs
+node --test scripts/translation-observer.test.cjs
 node --check content.js
 node --check background.js
 ```
@@ -49,7 +50,7 @@ Clone this repository, open `chrome://extensions/`, enable Developer mode, choos
 
 ## Current limits and privacy
 
-`main` targets MathJax v2 reprocessing and selected Cyrillic mappings. It does not provide universal MathJax, KaTeX or language support. Regex text extraction does not parse arbitrary nested LaTeX. Browser translation detection relies on `translated-ltr`/`translated-rtl` classes; starting on an already-translated page also exposes an observer-initialization bug in this version.
+`main` targets MathJax v2 reprocessing and selected Cyrillic mappings. It does not provide universal MathJax, KaTeX or language support. Regex text extraction does not parse arbitrary nested LaTeX. Browser translation detection relies on `translated-ltr`/`translated-rtl` classes. The translation observer handles both already-translated pages and later class changes.
 
 The current text translation path sends extracted Cyrillic words to `translate.googleapis.com` using the browser language. Failed translations are silently skipped. Review the broad page permissions in [manifest.json](manifest.json) before installing.
 

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MathShield — LaTeX unit repair</title>
+<style>
+body{font:17px/1.6 system-ui,sans-serif;color:#182c3a;background:#f6f8fb;margin:0}main{max-width:900px;margin:auto;padding:48px 24px}h1{font-size:38px;margin:0}h2{font-size:18px}a{color:#2855ae}textarea,pre{box-sizing:border-box;width:100%;font:16px/1.6 monospace;background:white;border:1px solid #c6cfdb;border-radius:8px;padding:18px;white-space:pre-wrap;overflow-wrap:anywhere}textarea{min-height:110px}button{font:inherit;padding:10px 18px;border:0;border-radius:6px;background:#2855ae;color:white;cursor:pointer}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.note{font-size:14px;color:#4a5b6b}#status{color:#285342}@media(max-width:650px){.grid{grid-template-columns:1fr}main{padding:24px}}
+</style>
+<main><h1>MathShield</h1>
+<p>Keep mathematical notation readable when translating physics problems.</p>
+<p><a href="https://github.com/s4m256/math-shield#installation">Install the Chrome extension</a> · <a href="https://github.com/s4m256/math-shield">Source & limitations</a></p>
+<div class="grid"><section><h2><label for="input">Before: Cyrillic unit symbols in LaTeX</label></h2><textarea id="input" spellcheck="false">v = 12\,\mathrm{км}/\mathrm{с}
+R = 4\,\mathrm{кОм}
+E = mc^2 + \alpha</textarea></section><section><h2>After: recognized units normalized</h2><pre id="output" aria-live="polite"></pre></section></div>
+<button id="repair">Repair units</button><p id="status" role="status"></p>
+<p class="note">Editable fixture using the extension's actual transformation functions. No translation service is called. This demonstrates selected Cyrillic unit repairs, not Chrome's translation UI or universal language support. The last formula is an unchanged control.</p>
+<h2>How the extension works</h2><p>Protect rendered MathJax nodes → detect browser translation → repair selected LaTeX text and units → request MathJax v2 reprocessing.</p></main>
+<script src="content.js"></script><script src="demo.js"></script>
+</html>
